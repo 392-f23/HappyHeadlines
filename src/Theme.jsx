@@ -18,6 +18,7 @@ export const theme = createTheme({
       1: "#D4C8BE",
       2: "#B0B0B0",
       3: "#EAE6DF",
+      4: "#AD8A65",
     },
   },
   breakpoints: {
@@ -35,5 +36,27 @@ export const theme = createTheme({
       fontWeight: 400,
       fontSize: "1rem",
     },
+    h3: {
+      fontFamily: "Oxygen",
+      fontWeight: 700,
+      fontSize: "1.2rem",
+    },
+    h4: {
+      fontFamily: "Source Sans 3",
+      fontWeight: 300,
+      fontSize: "0.8rem",
+    },
+    body1: {
+      fontFamily: "Source Sans 3",
+      fontWeight: 400,
+      fontSize: "0.9rem",
+      textAlign: "justify",
+    },
+    button: {
+      fontFamily: "Source Sans 3",
+      fontWeight: 400,
+      fontSize: "0.9rem",
+      textTransform: "none",
+    }
   },
 });

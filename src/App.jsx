@@ -1,14 +1,12 @@
-import { useState } from 'react'
-import './App.css'
-import HomePage from './pages/HomePage'
-import { ThemeProvider } from '@mui/material'
-import { theme } from './Theme'
-import fetchReportFromAPI from "./utility/api"; 
+import { useState } from "react";
+import "./App.css";
+import HomePage from "./pages/HomePage";
+import { ThemeProvider } from "@mui/material";
+import { theme } from "./Theme";
+import fetchReportFromAPI from "./utility/api";
 import getPositiveNews from "./utility/sentiment";
-import {useEffect} from "react"; 
-import Navbar from './components/Navbar'
-
-
+import { useEffect } from "react";
+import Navbar from "./components/Navbar";
 
 function App() {
   /*
@@ -22,10 +20,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <HomePage />
-      <button style={{ width: "100px", height: "100px"}} onClick = {() => fetchReportFromAPI()}></button>
       <Navbar />
     </ThemeProvider>
   );
 }
 
-export default App
+export default App;
