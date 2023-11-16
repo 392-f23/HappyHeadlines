@@ -1,9 +1,16 @@
 import { Box, IconButton, useTheme } from "@mui/material";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import PersonIcon from "@mui/icons-material/Person";
+import { useState } from "react";
 
-function Navbar() {
+function Navbar({ selected = "home" }) {
   const theme = useTheme();
+  const [pageSelected, setPageSelected] = useState(selected);
+
+  const handleButtonClick = (correspondingPage) => {
+    setPageSelected(correspondingPage);
+    // todo: navigate to right page
+  }
 
   return (
     <Box
@@ -20,21 +27,21 @@ function Navbar() {
         backgroundColor: theme.palette.primary[3],
       }}
     >
-      <IconButton sx={{ width: "60px", height: "60px" }}>
+      <IconButton sx={{ width: "60px", height: "60px" }} onClick={() => handleButtonClick("home")}>
         <NewspaperIcon
           sx={{
             color: theme.palette.text.primary,
-            width: "40px",
-            height: "40px",
+            width: pageSelected == "home" ? "40px" : "25px",
+            height: pageSelected == "home" ? "40px" : "25px",
           }}
         />
       </IconButton>
-      <IconButton sx={{ width: "60px", height: "60px" }}>
+      <IconButton sx={{ width: "60px", height: "60px" }} onClick={() => handleButtonClick("profile")}>
         <PersonIcon
           sx={{
             color: theme.palette.text.primary,
-            width: "40px",
-            height: "40px",
+            width: pageSelected == "profile" ? "40px" : "25px",
+            height: pageSelected == "profile" ? "40px" : "25px",
           }}
         />
       </IconButton>

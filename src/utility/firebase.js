@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import {
   getFirestore,
   doc,
+  addDoc,
   getDocs,
   setDoc,
   updateDoc,
@@ -20,6 +21,7 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 
+
 const firebaseConfig = {
     apiKey: "AIzaSyB44V64IZFgafr0p6akQ3OWJxU6ptonecg",
     authDomain: "happyheadlines-9393c.firebaseapp.com",
@@ -33,6 +35,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
+
+
+const pushNewsToDB = async (news) => {
+    news.forEach(async (n) => {
+      await addDoc(collection(db, "Stories"), n); 
+    }); 
+}
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
@@ -172,6 +181,13 @@ const submitFormInformation = async (dbState) => {
   await updateDoc(userDocRef, dbState);
 };
 
+// const submitStoryInformation = async (dbState) => {
+//   const uid = localStorage.getItem("uid");
+//   const userDocRef = doc(db, "users", uid);
+//   await setDoc(userDocRef, dbState, { merge: true });
+//   await updateDoc(userDocRef, dbState);
+// };
+
 const fetchUserData = async (uid) => {
   const userRef = doc(db, "users", uid);
   const snapshot = await getDoc(userRef);
@@ -225,6 +241,7 @@ export {
   isOnboarded,
   submitFormInformation,
   fetchUserData,
+  pushNewsToDB
 };
 
 export default submitFormInformation;

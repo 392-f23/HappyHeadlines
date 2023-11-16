@@ -7,13 +7,15 @@ const fetchReportFromAPI = async () => {
     // //radius of how far we want to restrict our news source => in meters! 
     // const radius =  11.35 * Math.pow(10, 9); 
     // console.log(`radius: ${radius}`); 
-    const locale = "us,ca"
-    const domains = "com,org"
-    const limitNews = 20; 
-    const apiURL = `https://api.thenewsapi.com/v1/news/all?api_token=${api_key}&domains=${domains}&language=en&limit=${limitNews}`;
-        ;const awresponse = await fetch(apiURL); 
-    console.log(response)    
-    return reports;
+    //const allNewsURL = `https://api.thenewsapi.com/v1/news/all?api_token=${api_key}&language=en&limit=3`;
+    const topStoriesURL = `https://api.thenewsapi.com/v1/news/top?api_token=${api_key}&locale=us&language=en`; 
+    const response = await fetch(topStoriesURL); 
+    const data = await response.json();
+    console.log(data);
+    const news = data["data"]; 
+    console.log(`news: \n`)
+    console.log(news)
+    return news; 
 }
 
 export default fetchReportFromAPI;

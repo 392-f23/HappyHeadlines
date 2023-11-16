@@ -1,21 +1,33 @@
-import { useState } from "react";
 import "./App.css";
 import HomePage from "./pages/HomePage";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "./Theme";
-import fetchReportFromAPI from "./utility/api";
-import getPositiveNews from "./utility/sentiment";
 import { useEffect } from "react";
 import Navbar from "./components/Navbar";
+import ProfilePage from "./pages/ProfilePage";
+import LoginPage from "./pages/LoginPage";
+
+const privateRoutes = [
+  { path: "/home", component: () => <HomePage /> },
+  { path: "/profile", component: () => <ProfilePage /> },
+];
+
+const publicRoutes = [{ path: "/login", component: () => <LoginPage /> }];
 
 function App() {
-  /*
-  useEffect(async () => {
-    const reports = await fetchReportFromAPI();
-    console.log("reports in app\n")
-    console.log(reports);
-    getPositiveNews(reports);
-  }, [])*/
+  // const isSignedIn = checkIfLoggedIn();
+  // const [isOnboarded, setIsOnboarded] = useState(false);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  // useEffect(() => {
+  //   const init = async () => {
+  //     const onboarded = await checkIfOnboarded();
+  //     setIsOnboarded(onboarded);
+  //     setIsLoading(false);
+  //   };
+
+  //   init();
+  // }, []);
 
   return (
     <ThemeProvider theme={theme}>
