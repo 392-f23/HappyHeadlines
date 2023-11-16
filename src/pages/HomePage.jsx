@@ -11,20 +11,16 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 function HomePage() {
   const [news, setNews] = useState(initialData);
-  console.log("news state in HomePage: \n");
-  console.log(news);
+
   //when user clicks refresh button, should call upon API and get back latest data!
   const updateDB = async () => {
     //make the api call to get back latest news!
     const latestNews = await fetchReportsFromAPI();
     const positiveLatestNews = getPostiveNews(latestNews);
-    console.log("positiveLatesetNews: \n");
-    console.log(positiveLatestNews);
     //update state!
     setNews(positiveLatestNews);
     //push to DB!
     pushNewsToDB(positiveLatestNews);
-    console.log("push to DB done");
   };
 
   const theme = useTheme();
@@ -74,17 +70,14 @@ function HomePage() {
           pb: 10,
         }}
       >
-        
         {getPostiveNews(news).map((data, idx) => {
-          console.log("current data: \n");
-          console.log(data);
           return (
             <NewsCard
               key={idx}
               title={data.title}
               imgUrl={data.image_url}
               tags={data.categories}
-              articleUrl={data.soure}
+              articleUrl={data.url}
               summary={data.description}
             />
           );

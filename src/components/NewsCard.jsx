@@ -10,10 +10,6 @@ import { ChevronRight } from "@mui/icons-material";
 
 function NewsCard({ title, tags, imgUrl, articleUrl, summary }) {
   const theme = useTheme();
-  const tagsArray = tags
-    .split(" & ")
-    .map((tag) => tag.charAt(0).toUpperCase() + tag.slice(1));
-  const tagsString = tagsArray.join(" / ");
 
   return (
     <Card
@@ -62,7 +58,7 @@ function NewsCard({ title, tags, imgUrl, articleUrl, summary }) {
             }}
           >
             <Typography variant="h4" sx={{ mb: 2 }}>
-              {tagsString}
+              {tags.join("/")}
             </Typography>
             <Typography variant="h3" sx={{ mb: 1 }}>
               {title}
