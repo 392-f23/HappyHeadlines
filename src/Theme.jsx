@@ -19,6 +19,7 @@ export const theme = createTheme({
       2: "#B0B0B0",
       3: "#EAE6DF",
       4: "#AD8A65",
+      5: "#4A4A48",
     },
   },
   breakpoints: {
@@ -51,6 +52,11 @@ export const theme = createTheme({
       fontWeight: 400,
       fontSize: "0.9rem",
       textAlign: "justify",
+    },
+    body2: {
+      fontFamily: "Source Sans 3",
+      fontWeight: 400,
+      fontSize: "1.2rem",
     },
     button: {
       fontFamily: "Source Sans 3",

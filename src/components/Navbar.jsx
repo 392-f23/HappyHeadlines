@@ -2,15 +2,17 @@ import { Box, IconButton, useTheme } from "@mui/material";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import PersonIcon from "@mui/icons-material/Person";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function Navbar({ selected = "home" }) {
+function Navbar() {
   const theme = useTheme();
-  const [pageSelected, setPageSelected] = useState(selected);
+  const navigate = useNavigate();
+  const [pageSelected, setPageSelected] = useState("home");
 
   const handleButtonClick = (correspondingPage) => {
     setPageSelected(correspondingPage);
-    // todo: navigate to right page
-  }
+    navigate(`/${correspondingPage}`);
+  };
 
   return (
     <Box
@@ -18,7 +20,7 @@ function Navbar({ selected = "home" }) {
         position: "fixed",
         bottom: 0,
         left: 0,
-        height: "70px",
+        height: "75px",
         width: "100%",
         display: "flex",
         justifyContent: "space-evenly",
@@ -27,7 +29,10 @@ function Navbar({ selected = "home" }) {
         backgroundColor: theme.palette.primary[3],
       }}
     >
-      <IconButton sx={{ width: "60px", height: "60px" }} onClick={() => handleButtonClick("home")}>
+      <IconButton
+        sx={{ width: "60px", height: "60px" }}
+        onClick={() => handleButtonClick("home")}
+      >
         <NewspaperIcon
           sx={{
             color: theme.palette.text.primary,
@@ -36,7 +41,10 @@ function Navbar({ selected = "home" }) {
           }}
         />
       </IconButton>
-      <IconButton sx={{ width: "60px", height: "60px" }} onClick={() => handleButtonClick("profile")}>
+      <IconButton
+        sx={{ width: "60px", height: "60px" }}
+        onClick={() => handleButtonClick("profile")}
+      >
         <PersonIcon
           sx={{
             color: theme.palette.text.primary,
