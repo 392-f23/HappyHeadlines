@@ -1,12 +1,14 @@
 import vader from "vader-sentiment";
 
 const getPostiveNews = (reports) => {
+  if (!reports) {
+    return [];
+  }
   const positiveNews = [];
 
   reports.forEach((report) => {
-    const { description } = report;
-    const intensity =
-      vader.SentimentIntensityAnalyzer.polarity_scores(description);
+    const { snippet } = report;
+    const intensity = vader.SentimentIntensityAnalyzer.polarity_scores(snippet);
 
     if (intensity.compound > 0.05) {
       positiveNews.push(report);

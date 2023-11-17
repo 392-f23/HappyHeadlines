@@ -6,10 +6,27 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 import { ChevronRight } from "@mui/icons-material";
 
-function NewsCard({ title, tags, imgUrl, articleUrl, summary }) {
+function NewsCard({ title, tags, imgUrls, articleUrl, summary }) {
   const theme = useTheme();
+  const baseUrl = "https://www.nytimes.com/";
+
+  const [img, setImg] = useState();
+
+  useEffect(() => {
+    const findImgUrl = () => {
+      const target = imgUrls.filter(
+        (currImg) => currImg.crop_name === "articleLarge"
+      );
+      const [targetImg] = target;
+      const { url } = targetImg;
+      setImg(baseUrl + url);
+    };
+
+    findImgUrl();
+  });
 
   return (
     <Card
@@ -47,7 +64,7 @@ function NewsCard({ title, tags, imgUrl, articleUrl, summary }) {
         <Box sx={{ width: "calc(100% - 46px)" }}>
           <Box
             component="img"
-            src={imgUrl}
+            src={img}
             sx={{ width: "100%", height: "100px", objectFit: "cover" }}
           />
           <Box
@@ -58,7 +75,7 @@ function NewsCard({ title, tags, imgUrl, articleUrl, summary }) {
             }}
           >
             <Typography variant="h4" sx={{ mb: 2 }}>
-              {tags.join("/")}
+              {tags}
             </Typography>
             <Typography variant="h3" sx={{ mb: 1 }}>
               {title}
