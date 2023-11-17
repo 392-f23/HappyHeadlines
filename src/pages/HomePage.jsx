@@ -94,9 +94,10 @@ function HomePage() {
                 key={idx}
                 title={data.headline.main}
                 imgUrls={data.multimedia}
-                tags={data.subsection_name}
+                tags={data.section_name}
                 articleUrl={data.web_url}
                 summary={data.lead_paragraph}
+                id={data._id}
               />
             );
           })}

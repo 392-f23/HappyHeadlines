@@ -4,10 +4,11 @@ import StyledDivider from "../components/StyledDivider";
 import BookmarkedStory from "../components/BookmarkedStory";
 import initialData from "../utility/initial-data.json";
 import TopicSelect from "../components/TopicSelect";
-import { useState } from "react";
-import { signOut } from "../utility/firebase";
+import { useState, useEffect } from "react";
+import { handleLogOut, fetchPersonalData } from "../utility/firebase";
+import { useNavigate } from "react-router-dom";
 
-function ProfilePage({ name, photoUrl }) {
+function ProfilePage() {
   const theme = useTheme();
   const possibleTags = [
     "Business",
@@ -18,7 +19,22 @@ function ProfilePage({ name, photoUrl }) {
     "Sports",
     "Technology",
   ];
+
   const [selectedTags, setSelectedTags] = useState([]);
+  const navigate = useNavigate();
+  const name = localStorage.getItem("name");
+  const photoUrl = localStorage.getItem("photoUrl");
+  let likedPosts;
+
+  useEffect(() => {
+    const init = async () => {
+      const data = await fetchPersonalData();
+      console.log(data);
+      likedPosts = data.likedPosts;
+    };
+
+    init();
+  }, []);
 
   return (
     <Container>
@@ -72,6 +88,7 @@ function ProfilePage({ name, photoUrl }) {
         <Box sx={{ width: "77vw" }}>
           <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
             {initialData.map((story) => {
+              console.log(story);
               return (
                 <BookmarkedStory
                   key={story.uuid}
@@ -109,7 +126,7 @@ function ProfilePage({ name, photoUrl }) {
               backgroundColor: theme.palette.primary[5],
             },
           }}
-          onClick={() => signOut()}
+          onClick={() => handleLogOut(navigate)}
         >
           Log Out
         </Button>

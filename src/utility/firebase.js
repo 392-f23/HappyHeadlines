@@ -21,27 +21,25 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 
-
 const firebaseConfig = {
-    apiKey: "AIzaSyB44V64IZFgafr0p6akQ3OWJxU6ptonecg",
-    authDomain: "happyheadlines-9393c.firebaseapp.com",
-    projectId: "happyheadlines-9393c",
-    storageBucket: "happyheadlines-9393c.appspot.com",
-    messagingSenderId: "616597320029",
-    appId: "1:616597320029:web:a2d7bda36ec9202ebef8b4",
-    measurementId: "G-V6K7HZSHTX"
+  apiKey: "AIzaSyB44V64IZFgafr0p6akQ3OWJxU6ptonecg",
+  authDomain: "happyheadlines-9393c.firebaseapp.com",
+  projectId: "happyheadlines-9393c",
+  storageBucket: "happyheadlines-9393c.appspot.com",
+  messagingSenderId: "616597320029",
+  appId: "1:616597320029:web:a2d7bda36ec9202ebef8b4",
+  measurementId: "G-V6K7HZSHTX",
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-
 const pushNewsToDB = async (news) => {
-    news.forEach(async (n) => {
-      await addDoc(collection(db, "Stories"), n); 
-    }); 
-}
+  news.forEach(async (n) => {
+    await addDoc(collection(db, "Stories"), n);
+  });
+};
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account" });
@@ -91,10 +89,6 @@ const handleLogOut = (navigate) => {
   localStorage.removeItem("name");
   localStorage.removeItem("photoUrl");
   localStorage.removeItem("uid");
-
-  localStorage.removeItem("PersonalData");
-  localStorage.removeItem("PartnerPreferences");
-  localStorage.removeItem("prevRequestLength");
   navigate(0);
 };
 
@@ -121,8 +115,7 @@ const signUpWithGoogle = async (navigate) => {
           displayName: user.displayName,
           photoURL: user.photoURL,
           onboarded: false,
-          PersonalData: {},
-          PartnerPreferences: {},
+          likedPosts: [],
         };
         await setDoc(userDocRef, userData, { merge: true });
         signInWithGoogle(user, navigate);
@@ -142,12 +135,6 @@ const signInWithGoogle = async (user, navigate) => {
 
   const userDocRef = doc(db, "users", uid);
   const userDoc = await getDoc(userDocRef);
-  const data = userDoc.data();
-  localStorage.setItem("PersonalData", JSON.stringify(data.PersonalData));
-  localStorage.setItem(
-    "PartnerPreferences",
-    JSON.stringify(data.PartnerPreferences)
-  );
   navigate(0);
 };
 
@@ -227,6 +214,29 @@ export const fetchPersonalData = async () => {
   return null;
 };
 
+export const saveToFavorite = async (id, saved) => {
+  const uid = localStorage.getItem("uid");
+  const userRef = doc(db, "users", uid);
+  const snapshot = await getDoc(userRef);
+
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    const { likedPosts } = data;
+
+    if (saved) {
+      const posts = likedPosts.filter((postId) => postId != id);
+      const newData = Object.assign(data, { likedPosts: posts });
+      await setDoc(userRef, newData);
+    } else {
+      likedPosts.push(id);
+
+      await setDoc(userRef, data);
+    }
+  }
+
+  return false;
+};
+
 export {
   db,
   auth,
@@ -241,7 +251,7 @@ export {
   isOnboarded,
   submitFormInformation,
   fetchUserData,
-  pushNewsToDB
+  pushNewsToDB,
 };
 
 export default submitFormInformation;
