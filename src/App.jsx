@@ -19,14 +19,14 @@ const privateRoutes = [
   { path: "/home", component: () => <HomePage /> },
   {
     path: "/profile",
-    component: () => <ProfilePage name="David" photoUrl={dummyUserPhoto} />,
+    component: () => <ProfilePage />,
   }, // todo: change params
 ];
 
 const publicRoutes = [{ path: "/login", component: () => <LoginPage /> }];
 
 function App() {
-  const isSignedIn = true; // checkIfLoggedIn();
+  const isSignedIn = checkIfLoggedIn();
   const [isOnboarded, setIsOnboarded] = useState(true); // useState(false);
   const [isLoading, setIsLoading] = useState(false); // useState(true);
 

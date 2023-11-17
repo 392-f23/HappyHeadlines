@@ -7,12 +7,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ChevronRight } from "@mui/icons-material";
+import { ChevronRight, Favorite, FavoriteBorder } from "@mui/icons-material";
+import { saveToFavorite } from "../utility/firebase";
 
-function NewsCard({ title, tags, imgUrls, articleUrl, summary }) {
+function NewsCard({ title, tags, imgUrls, articleUrl, summary, id }) {
   const theme = useTheme();
   const baseUrl = "https://www.nytimes.com/";
-
   const [img, setImg] = useState();
 
   useEffect(() => {
@@ -74,9 +74,20 @@ function NewsCard({ title, tags, imgUrls, articleUrl, summary }) {
               padding: "10px 30px",
             }}
           >
-            <Typography variant="h4" sx={{ mb: 2 }}>
-              {tags}
-            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 2,
+              }}
+            >
+              <Typography variant="h4">{tags}</Typography>
+              <Button onClick={() => saveToFavorite(id, true)}>
+                <FavoriteBorder />
+              </Button>
+            </Box>
             <Typography variant="h3" sx={{ mb: 1 }}>
               {title}
             </Typography>
