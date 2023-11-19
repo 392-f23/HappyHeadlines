@@ -29,7 +29,6 @@ function ProfilePage() {
   useEffect(() => {
     const init = async () => {
       const data = await fetchPersonalData();
-      console.log(data);
       likedPosts = data.likedPosts;
     };
 
@@ -88,7 +87,6 @@ function ProfilePage() {
         <Box sx={{ width: "77vw" }}>
           <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
             {initialData.map((story) => {
-              console.log(story);
               return (
                 <BookmarkedStory
                   key={story.uuid}
