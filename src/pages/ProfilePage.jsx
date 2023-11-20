@@ -29,7 +29,7 @@ function ProfilePage() {
   useEffect(() => {
     const init = async () => {
       const data = await fetchPersonalData();
-      likedPosts = data.likedPosts;
+      likedPosts = data?.likedPosts;
     };
 
     init();

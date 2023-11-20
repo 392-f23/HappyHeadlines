@@ -6,27 +6,11 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { ChevronRight, Favorite, FavoriteBorder } from "@mui/icons-material";
-import { saveToFavorite } from "../utility/firebase";
+import { ChevronRight } from "@mui/icons-material";
 
-function NewsCard({ title, tags, imgUrls, articleUrl, summary, id }) {
+function NewsCard({ title, tags, imgUrl, articleUrl, summary }) {
   const theme = useTheme();
-  const baseUrl = "https://www.nytimes.com/";
-  const [img, setImg] = useState();
-
-  useEffect(() => {
-    const findImgUrl = () => {
-      const target = imgUrls.filter(
-        (currImg) => currImg.crop_name === "articleLarge"
-      );
-      const [targetImg] = target;
-      const { url } = targetImg;
-      setImg(baseUrl + url);
-    };
-
-    findImgUrl();
-  });
+  const tagsString = tags.join(" / ");
 
   return (
     <Card
@@ -64,7 +48,7 @@ function NewsCard({ title, tags, imgUrls, articleUrl, summary, id }) {
         <Box sx={{ width: "calc(100% - 46px)" }}>
           <Box
             component="img"
-            src={img}
+            src={imgUrl}
             sx={{ width: "100%", height: "100px", objectFit: "cover" }}
           />
           <Box
@@ -74,20 +58,9 @@ function NewsCard({ title, tags, imgUrls, articleUrl, summary, id }) {
               padding: "10px 30px",
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                mb: 2,
-              }}
-            >
-              <Typography variant="h4">{tags}</Typography>
-              <Button onClick={() => saveToFavorite(id, true)}>
-                <FavoriteBorder />
-              </Button>
-            </Box>
+            <Typography variant="h4" sx={{ mb: 2 }}>
+              {tagsString}
+            </Typography>
             <Typography variant="h3" sx={{ mb: 1 }}>
               {title}
             </Typography>
