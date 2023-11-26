@@ -17,17 +17,14 @@ function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [news, setNews] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
+  const [refetch, setRefetch] = useState(false);
 
-  //when user clicks refresh button, should call upon API and get back latest data!
-  const updateDB = async () => {
+  const fetchLatestNews = async () => {
     setIsLoading(true);
-    //make the api call to get back latest news!
     const latestNews = await fetchReportsFromAPI();
     const positiveLatestNews = getPostiveNews(latestNews);
-    //update state!
-    setNews(positiveLatestNews);
-    //push to DB!
-    pushNewsToDB(positiveLatestNews);
+    await pushNewsToDB(positiveLatestNews);
+    setRefetch(!refetch);
     setIsLoading(false);
   };
 
@@ -71,7 +68,7 @@ function HomePage() {
     };
 
     init();
-  }, []);
+  }, [refetch]);
 
   const theme = useTheme();
 
@@ -109,7 +106,7 @@ function HomePage() {
                 height: "45px",
                 color: theme.palette.text.primary,
               }}
-              // onClick={updateDB}
+              onClick={() => fetchLatestNews()}
             />
           </IconButton>
         </Box>
