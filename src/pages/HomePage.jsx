@@ -6,12 +6,12 @@ import Container from "../components/Container";
 import { getPostiveNews } from "../utility/sentiment";
 import LoadingContainer from "../components/LoadingContainer";
 import fetchReportsFromAPI from "../utility/api";
-import { pushNewsToDB } from "../utility/firebase";
+import { fetchNewsFromDb, pushNewsToDB } from "../utility/firebase";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
-  const [news, setNews] = useState();
+  const [news, setNews] = useState([]);
 
   //when user clicks refresh button, should call upon API and get back latest data!
   const updateDB = async () => {
@@ -26,16 +26,42 @@ function HomePage() {
     setIsLoading(false);
   };
 
+  // const asyncTimeout = (currIndex) =>
+  //   new Promise((resolve) => {
+  //     setTimeout(async () => {
+  //       console.log(currIndex);
+  //       const latestNews = await fetchReportsFromAPI(currIndex);
+  //       const currPositive = getPostiveNews(latestNews);
+  //       resolve(currPositive);
+  //     }, 12000);
+  //   });
+
+  // useEffect(() => {
+  //   const fetchNews = async () => {
+  //     setIsLoading(true);
+  //     const positiveNews = [];
+
+  //     for (let i = 0; i < 50; i++) {
+  //       const positive = await asyncTimeout(i);
+  //       positiveNews.push(positive);
+  //     }
+
+  //     await pushNewsToDB(positiveNews);
+  //     setIsLoading(false);
+  //   };
+
+  //   fetchNews();
+  // }, []);
+
   useEffect(() => {
-    const fetchNews = async () => {
+    const init = async () => {
       setIsLoading(true);
-      const latestNews = await fetchReportsFromAPI();
-      const positiveLatestNews = getPostiveNews(latestNews);
-      setNews(positiveLatestNews);
+      const data = await fetchNewsFromDb();
+      setNews(data);
       setIsLoading(false);
     };
 
-    fetchNews();
+    init();
   }, []);
 
   const theme = useTheme();
@@ -74,7 +100,7 @@ function HomePage() {
                 height: "45px",
                 color: theme.palette.text.primary,
               }}
-              onClick={updateDB}
+              // onClick={updateDB}
             />
           </IconButton>
         </Box>
@@ -88,16 +114,16 @@ function HomePage() {
             pb: 10,
           }}
         >
-          {getPostiveNews(news).map((data, idx) => {
+          {news.map((data, idx) => {
             return (
               <NewsCard
                 key={idx}
-                title={data.headline.main}
-                imgUrls={data.multimedia}
-                tags={data.section_name}
-                articleUrl={data.web_url}
-                summary={data.lead_paragraph}
-                id={data._id}
+                title={data.title}
+                imageUrl={data.image}
+                tags={data.tags}
+                articleUrl={data.articleUrl}
+                summary={data.summary}
+                id={data.id}
               />
             );
           })}

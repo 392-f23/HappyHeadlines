@@ -10,23 +10,8 @@ import { useEffect, useState } from "react";
 import { ChevronRight, Favorite, FavoriteBorder } from "@mui/icons-material";
 import { saveToFavorite } from "../utility/firebase";
 
-function NewsCard({ title, tags, imgUrls, articleUrl, summary, id }) {
+function NewsCard({ title, tags, imageUrl, articleUrl, summary, id }) {
   const theme = useTheme();
-  const baseUrl = "https://www.nytimes.com/";
-  const [img, setImg] = useState();
-
-  useEffect(() => {
-    const findImgUrl = () => {
-      const target = imgUrls.filter(
-        (currImg) => currImg.crop_name === "articleLarge"
-      );
-      const [targetImg] = target;
-      const { url } = targetImg;
-      setImg(baseUrl + url);
-    };
-
-    findImgUrl();
-  });
 
   return (
     <Card
@@ -64,7 +49,7 @@ function NewsCard({ title, tags, imgUrls, articleUrl, summary, id }) {
         <Box sx={{ width: "calc(100% - 46px)" }}>
           <Box
             component="img"
-            src={img}
+            src={imageUrl}
             sx={{ width: "100%", height: "100px", objectFit: "cover" }}
           />
           <Box
