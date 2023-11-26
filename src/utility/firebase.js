@@ -36,9 +36,50 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 
 const pushNewsToDB = async (news) => {
-  news.forEach(async (n) => {
-    await addDoc(collection(db, "Stories"), n);
+  const baseUrl = "https://www.nytimes.com/";
+
+  news.forEach(async (newsArr) => {
+    newsArr.forEach(async (n) => {
+      const {
+        _id: id,
+        headline,
+        multimedia,
+        section_name: sectionName,
+        web_url: webUrl,
+        lead_paragraph: leadParagraph,
+      } = n;
+      const target = multimedia.filter(
+        (currImg) => currImg.subType === "xlarge"
+      );
+      const [targetImg] = target;
+      const { url } = targetImg;
+
+      if (!url) {
+        return;
+      }
+
+      const newsObject = {
+        id,
+        image: baseUrl + url,
+        title: headline.main,
+        tags: sectionName,
+        articleUrl: webUrl,
+        summary: leadParagraph,
+      };
+      await addDoc(collection(db, "Stories"), newsObject);
+    });
   });
+};
+
+const fetchNewsFromDb = async () => {
+  const querySnapshot = await getDocs(collection(db, "Stories"));
+
+  const documents = [];
+  querySnapshot.forEach((document) => {
+    documents.push(Object.assign(document.data(), { documentId: document.id }));
+  });
+
+  return documents;
 };
 
 const provider = new GoogleAuthProvider();
@@ -229,12 +270,21 @@ export const saveToFavorite = async (id, saved) => {
       await setDoc(userRef, newData);
     } else {
       likedPosts.push(id);
-
       await setDoc(userRef, data);
     }
   }
 
   return false;
+};
+
+const fetchStory = async (id) => {
+  const postRef = doc(db, "Stories", id);
+  const snapshot = await getDoc(postRef);
+
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    return data;
+  }
 };
 
 export {
@@ -252,6 +302,8 @@ export {
   submitFormInformation,
   fetchUserData,
   pushNewsToDB,
+  fetchNewsFromDb,
+  fetchStory,
 };
 
 export default submitFormInformation;
