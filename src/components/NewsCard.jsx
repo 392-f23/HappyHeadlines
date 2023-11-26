@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Box,
   Card,
@@ -6,12 +7,21 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { ChevronRight, Favorite, FavoriteBorder } from "@mui/icons-material";
 import { saveToFavorite } from "../utility/firebase";
 
-function NewsCard({ title, tags, imageUrl, articleUrl, summary, id }) {
+function NewsCard({
+  title,
+  tags,
+  imageUrl,
+  articleUrl,
+  summary,
+  id,
+  isFavorite,
+  documentId,
+}) {
   const theme = useTheme();
+  const [isSaved, setIsSaved] = useState(isFavorite);
 
   return (
     <Card
@@ -69,8 +79,13 @@ function NewsCard({ title, tags, imageUrl, articleUrl, summary, id }) {
               }}
             >
               <Typography variant="h4">{tags}</Typography>
-              <Button onClick={() => saveToFavorite(id, true)}>
-                <FavoriteBorder />
+              <Button
+                onClick={() => {
+                  saveToFavorite(documentId, isFavorite);
+                  setIsSaved(!isSaved);
+                }}
+              >
+                {isSaved ? <Favorite /> : <FavoriteBorder />}
               </Button>
             </Box>
             <Typography variant="h3" sx={{ mb: 1 }}>

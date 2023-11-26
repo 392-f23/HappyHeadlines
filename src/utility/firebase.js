@@ -54,6 +54,10 @@ const pushNewsToDB = async (news) => {
       const [targetImg] = target;
       const { url } = targetImg;
 
+      if (!url) {
+        return;
+      }
+
       const newsObject = {
         id,
         image: baseUrl + url,
@@ -72,7 +76,7 @@ const fetchNewsFromDb = async () => {
 
   const documents = [];
   querySnapshot.forEach((document) => {
-    documents.push(document.data());
+    documents.push(Object.assign(document.data(), { documentId: document.id }));
   });
 
   return documents;
@@ -266,12 +270,21 @@ export const saveToFavorite = async (id, saved) => {
       await setDoc(userRef, newData);
     } else {
       likedPosts.push(id);
-
       await setDoc(userRef, data);
     }
   }
 
   return false;
+};
+
+const fetchStory = async (id) => {
+  const postRef = doc(db, "Stories", id);
+  const snapshot = await getDoc(postRef);
+
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    return data;
+  }
 };
 
 export {
@@ -290,6 +303,7 @@ export {
   fetchUserData,
   pushNewsToDB,
   fetchNewsFromDb,
+  fetchStory,
 };
 
 export default submitFormInformation;

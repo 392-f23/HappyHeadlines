@@ -6,12 +6,17 @@ import Container from "../components/Container";
 import { getPostiveNews } from "../utility/sentiment";
 import LoadingContainer from "../components/LoadingContainer";
 import fetchReportsFromAPI from "../utility/api";
-import { fetchNewsFromDb, pushNewsToDB } from "../utility/firebase";
+import {
+  fetchNewsFromDb,
+  fetchPersonalData,
+  pushNewsToDB,
+} from "../utility/firebase";
 import RefreshIcon from "@mui/icons-material/Refresh";
 
 function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [news, setNews] = useState([]);
+  const [likedPosts, setLikedPosts] = useState([]);
 
   //when user clicks refresh button, should call upon API and get back latest data!
   const updateDB = async () => {
@@ -58,6 +63,10 @@ function HomePage() {
       setIsLoading(true);
       const data = await fetchNewsFromDb();
       setNews(data);
+
+      const userInfo = await fetchPersonalData();
+      const { likedPosts } = userInfo;
+      setLikedPosts(likedPosts);
       setIsLoading(false);
     };
 
@@ -124,6 +133,8 @@ function HomePage() {
                 articleUrl={data.articleUrl}
                 summary={data.summary}
                 id={data.id}
+                documentId={data.documentId}
+                isFavorite={likedPosts.includes(data.documentId)}
               />
             );
           })}

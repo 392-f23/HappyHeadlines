@@ -5,7 +5,11 @@ import BookmarkedStory from "../components/BookmarkedStory";
 import initialData from "../utility/initial-data.json";
 import TopicSelect from "../components/TopicSelect";
 import { useState, useEffect } from "react";
-import { handleLogOut, fetchPersonalData } from "../utility/firebase";
+import {
+  handleLogOut,
+  fetchPersonalData,
+  fetchStory,
+} from "../utility/firebase";
 import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
@@ -24,12 +28,21 @@ function ProfilePage() {
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const photoUrl = localStorage.getItem("photoUrl");
-  let likedPosts;
+  const [bookmarked, setBookmarked] = useState([]);
 
   useEffect(() => {
     const init = async () => {
       const data = await fetchPersonalData();
-      likedPosts = data.likedPosts;
+      const { likedPosts } = data;
+
+      const promises = [];
+      likedPosts.forEach((id) => {
+        promises.push(fetchStory(id));
+      });
+
+      Promise.all(promises).then((stories) => {
+        setBookmarked(stories);
+      });
     };
 
     init();
@@ -86,13 +99,13 @@ function ProfilePage() {
         </Typography>
         <Box sx={{ width: "77vw" }}>
           <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
-            {initialData.map((story) => {
+            {bookmarked.map((story) => {
               return (
                 <BookmarkedStory
-                  key={story.uuid}
-                  headline={story.title}
-                  photoUrl={story.image_url}
-                  articleUrl={story.url}
+                  key={story.documentId}
+                  headline={story.summary}
+                  photoUrl={story.image}
+                  articleUrl={story.articleUrl}
                 />
               );
             })}
