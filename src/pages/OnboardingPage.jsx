@@ -28,7 +28,7 @@ function OnboardingPage() {
   return (
     <Container>
       <Typography variant="h1" sx={{ mb: 1, mt: 6 }}>
-        HappyHeadlines
+        NonNegativeNews
       </Typography>
       <Typography variant="h2">Let's get you onboarded.</Typography>
       <StyledDivider />

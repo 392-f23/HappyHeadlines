@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { ChevronRight, Favorite, FavoriteBorder } from "@mui/icons-material";
 import { saveToFavorite } from "../utility/firebase";
-
+import DropdownShareButton from "./DropdownShareButton"
 function NewsCard({
   title,
   tags,
@@ -80,13 +80,15 @@ function NewsCard({
             >
               <Typography variant="h4">{tags}</Typography>
               <Button
+                sx={{ minWidth: "36px", width: "36px" }}
                 onClick={() => {
-                  saveToFavorite(documentId, isFavorite);
+                  saveToFavorite(documentId, isSaved);
                   setIsSaved(!isSaved);
                 }}
               >
                 {isSaved ? <Favorite /> : <FavoriteBorder />}
               </Button>
+              <DropdownShareButton articleUrl={articleUrl}/>
             </Box>
             <Typography variant="h3" sx={{ mb: 1 }}>
               {title}

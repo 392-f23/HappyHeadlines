@@ -13,7 +13,7 @@ function LoginPage() {
     <Container>
       <Box sx={{ mt: 6 }}>
         <Typography variant="h1" sx={{ fontSize: "2.3rem" }}>
-          HappyHeadlines
+          NonNegativeNews
         </Typography>
         <StyledDivider />
       </Box>

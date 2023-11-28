@@ -1,6 +1,12 @@
+import React, { useState } from 'react';
 import { Box, Typography } from "@mui/material";
 
-function BookmarkedStory({ headline, photoUrl, articleUrl }) {
+function BookmarkedStory({ headline, photoUrl, articleUrl, title }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const toggleExpanded = () => {
+    setExpanded(!expanded);
+  };
   return (
     <Box
       sx={{
@@ -38,19 +44,49 @@ function BookmarkedStory({ headline, photoUrl, articleUrl }) {
           }}
           onClick={() => window.open(articleUrl, "_blank")}
         />
-        <Typography
-          variant="body1"
-          sx={{
-            width: "100%",
-            height: "auto",
-            wordBreak: "break-word",
-            textAlign: "center",
-            mb: 2,
-            display: "inline-block",
-          }}
-        >
-          {headline}
+        <Typography sx={{
+          fontWeight:"bold",
+          textAlign:"center"
+        }}>
+          {title}
         </Typography>
+      <Typography
+        variant="body1"
+        sx={{
+          width: '100%',
+          height: expanded ? 'auto' : '6em', // Show max 2 lines initially
+          overflow: 'hidden',
+          wordBreak: 'break-word',
+          textAlign: 'center',
+          position: 'relative',
+          display: '-webkit-box',
+          '-webkit-line-clamp': expanded ? 'unset' : 2, // Limit to 2 lines
+          '-webkit-box-orient': 'vertical',
+          mb: 2,
+        }}
+      >
+        {headline}
+        
+      </Typography>
+      
+      {!expanded && (
+        <Box>
+          {/* these 3 dots should go next to the minimized text */}
+          <Typography>
+            ...
+          </Typography>
+          <button onClick={toggleExpanded} style={{ display: 'block', margin: '0 auto' }}>
+            Show more
+          </button>
+        </Box>
+        
+        
+      )}
+      {expanded && (
+        <button onClick={toggleExpanded} style={{ display: 'block', margin: '0 auto' }}>
+          Show less
+        </button>
+      )}
       </Box>
     </Box>
   );

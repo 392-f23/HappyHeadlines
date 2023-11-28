@@ -73,12 +73,10 @@ const pushNewsToDB = async (news) => {
 
 const fetchNewsFromDb = async () => {
   const querySnapshot = await getDocs(collection(db, "Stories"));
-
   const documents = [];
   querySnapshot.forEach((document) => {
     documents.push(Object.assign(document.data(), { documentId: document.id }));
   });
-
   return documents;
 };
 
@@ -251,7 +249,6 @@ export const fetchPersonalData = async () => {
     const data = snapshot.data();
     return data;
   }
-
   return null;
 };
 
@@ -270,11 +267,10 @@ export const saveToFavorite = async (id, saved) => {
       await setDoc(userRef, newData);
     } else {
       likedPosts.push(id);
-      await setDoc(userRef, data);
+      const newData = Object.assign(data, { likedPosts: likedPosts });
+      await setDoc(userRef, newData);
     }
   }
-
-  return false;
 };
 
 const fetchStory = async (id) => {

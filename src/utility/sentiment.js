@@ -9,8 +9,8 @@ const getPostiveNews = (reports) => {
   reports.forEach((report) => {
     const { snippet } = report;
     const intensity = vader.SentimentIntensityAnalyzer.polarity_scores(snippet);
-
-    if (intensity.compound > 0.5) {
+    //lower bound 0.7
+    if (intensity.compound > 0.7) {
       positiveNews.push(report);
     }
   });

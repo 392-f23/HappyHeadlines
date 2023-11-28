@@ -45,6 +45,7 @@ function HomePage() {
 
   //     for (let i = 0; i < 50; i++) {
   //       const positive = await asyncTimeout(i);
+  //       console.log(positive);
   //       positiveNews.push(positive);
   //     }
 
@@ -60,7 +61,6 @@ function HomePage() {
       setIsLoading(true);
       const data = await fetchNewsFromDb();
       setNews(data);
-
       const userInfo = await fetchPersonalData();
       const { likedPosts } = userInfo;
       setLikedPosts(likedPosts);
@@ -70,8 +70,7 @@ function HomePage() {
     init();
   }, [refetch]);
 
-  const theme = useTheme();
-
+  const theme = useTheme()
   return (
     <LoadingContainer isLoading={isLoading}>
       <Container>
@@ -93,20 +92,19 @@ function HomePage() {
             }}
           >
             <Typography variant="h1" sx={{ mb: 1 }}>
-              HappyHeadlines
+              NonNegativeNews
             </Typography>
             <Typography variant="h2">
               Here are some uplifting stories.
             </Typography>
           </Box>
-          <IconButton>
+          <IconButton onClick={() => fetchLatestNews()}>
             <RefreshIcon
               sx={{
                 width: "45px",
                 height: "45px",
                 color: theme.palette.text.primary,
               }}
-              onClick={() => fetchLatestNews()}
             />
           </IconButton>
         </Box>

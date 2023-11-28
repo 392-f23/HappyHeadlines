@@ -29,6 +29,30 @@ function ProfilePage() {
   const name = localStorage.getItem("name");
   const photoUrl = localStorage.getItem("photoUrl");
   const [bookmarked, setBookmarked] = useState([]);
+  console.log("Profile Page  component render!")
+  console.log("bookmarked: \n")
+  console.log(bookmarked); 
+
+  //Main Filter By Topic Function! 
+  //arg: topics => array of topic keywords! (World, Business, etc.)
+  const filterByTopic = (topics) => {
+    bookmarked.filter((bm) => {
+      const tags = bm.tags; 
+      var shouldInclude = true; 
+      for(const tag of tags){
+        if(tags.indexOf(tag) === -1){
+          shouldInclude = false; 
+        }
+      }
+      return shouldInclude
+    }); 
+  }
+
+  //Sort Utility! 
+  //sortFactors => selected criteria we need to sort by! 
+  const sortBookmarkedStories = (sortFactors) => {
+
+  }
 
   useEffect(() => {
     const init = async () => {
@@ -41,10 +65,11 @@ function ProfilePage() {
       });
 
       Promise.all(promises).then((stories) => {
+        console.log("resolved stories: \n"); 
+        console.log(stories); 
         setBookmarked(stories);
       });
     };
-
     init();
   }, []);
 
@@ -68,7 +93,7 @@ function ProfilePage() {
           }}
         >
           <Typography variant="h1" sx={{ mb: 1 }}>
-            HappyHeadlines
+            NonNegativeNews
           </Typography>
           <Typography variant="h2">Welcome back, {name}.</Typography>
         </Box>
@@ -99,28 +124,19 @@ function ProfilePage() {
         </Typography>
         <Box sx={{ width: "77vw" }}>
           <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
-            {bookmarked.map((story) => {
+            {bookmarked && bookmarked.map((story) => {
               return (
                 <BookmarkedStory
                   key={story.documentId}
                   headline={story.summary}
                   photoUrl={story.image}
                   articleUrl={story.articleUrl}
+                  title={story.title}
                 />
               );
             })}
           </Box>
         </Box>
-      </Box>
-      <Box sx={{ width: "100%" }}>
-        <StyledDivider />
-        <Typography variant="h2">Your selected topics.</Typography>
-        <TopicSelect
-          possibleTags={possibleTags}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
-          showSaveButton={true}
-        />
       </Box>
       <Box sx={{ width: "100%" }}>
         <StyledDivider />
