@@ -29,30 +29,28 @@ function ProfilePage() {
   const name = localStorage.getItem("name");
   const photoUrl = localStorage.getItem("photoUrl");
   const [bookmarked, setBookmarked] = useState([]);
-  console.log("Profile Page  component render!")
-  console.log("bookmarked: \n")
-  console.log(bookmarked); 
+  console.log("Profile Page  component render!");
+  console.log("bookmarked: \n");
+  console.log(bookmarked);
 
-  //Main Filter By Topic Function! 
+  //Main Filter By Topic Function!
   //arg: topics => array of topic keywords! (World, Business, etc.)
   const filterByTopic = (topics) => {
     bookmarked.filter((bm) => {
-      const tags = bm.tags; 
-      var shouldInclude = true; 
-      for(const tag of tags){
-        if(tags.indexOf(tag) === -1){
-          shouldInclude = false; 
+      const tags = bm.tags;
+      var shouldInclude = true;
+      for (const tag of tags) {
+        if (tags.indexOf(tag) === -1) {
+          shouldInclude = false;
         }
       }
-      return shouldInclude
-    }); 
-  }
+      return shouldInclude;
+    });
+  };
 
-  //Sort Utility! 
-  //sortFactors => selected criteria we need to sort by! 
-  const sortBookmarkedStories = (sortFactors) => {
-
-  }
+  //Sort Utility!
+  //sortFactors => selected criteria we need to sort by!
+  const sortBookmarkedStories = (sortFactors) => {};
 
   useEffect(() => {
     const init = async () => {
@@ -65,8 +63,8 @@ function ProfilePage() {
       });
 
       Promise.all(promises).then((stories) => {
-        console.log("resolved stories: \n"); 
-        console.log(stories); 
+        console.log("resolved stories: \n");
+        console.log(stories);
         setBookmarked(stories);
       });
     };
@@ -124,17 +122,18 @@ function ProfilePage() {
         </Typography>
         <Box sx={{ width: "77vw" }}>
           <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
-            {bookmarked && bookmarked.map((story) => {
-              return (
-                <BookmarkedStory
-                  key={story.documentId}
-                  headline={story.summary}
-                  photoUrl={story.image}
-                  articleUrl={story.articleUrl}
-                  title={story.title}
-                />
-              );
-            })}
+            {bookmarked &&
+              bookmarked.map((story) => {
+                return (
+                  <BookmarkedStory
+                    key={story.documentId}
+                    headline={story.summary}
+                    photoUrl={story.image}
+                    articleUrl={story.articleUrl}
+                    title={story.title}
+                  />
+                );
+              })}
           </Box>
         </Box>
       </Box>

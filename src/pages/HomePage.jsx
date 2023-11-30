@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  useTheme,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import NewsCard from "../components/NewsCard";
 import StyledDivider from "../components/StyledDivider";
 import Container from "../components/Container";
@@ -15,9 +24,12 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 
 function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchedNews, setFetchedNews] = useState([]);
   const [news, setNews] = useState([]);
   const [likedPosts, setLikedPosts] = useState([]);
   const [refetch, setRefetch] = useState(false);
+  const [filter, setFilter] = useState("");
+  const [possibleFilters, setPossibleFilters] = useState([]);
 
   const fetchLatestNews = async () => {
     setIsLoading(true);
@@ -28,39 +40,17 @@ function HomePage() {
     setIsLoading(false);
   };
 
-  // const asyncTimeout = (currIndex) =>
-  //   new Promise((resolve) => {
-  //     setTimeout(async () => {
-  //       console.log(currIndex);
-  //       const latestNews = await fetchReportsFromAPI(currIndex);
-  //       const currPositive = getPostiveNews(latestNews);
-  //       resolve(currPositive);
-  //     }, 12000);
-  //   });
-
-  // useEffect(() => {
-  //   const fetchNews = async () => {
-  //     setIsLoading(true);
-  //     const positiveNews = [];
-
-  //     for (let i = 0; i < 50; i++) {
-  //       const positive = await asyncTimeout(i);
-  //       console.log(positive);
-  //       positiveNews.push(positive);
-  //     }
-
-  //     await pushNewsToDB(positiveNews);
-  //     setIsLoading(false);
-  //   };
-
-  //   fetchNews();
-  // }, []);
-
   useEffect(() => {
     const init = async () => {
       setIsLoading(true);
       const data = await fetchNewsFromDb();
       setNews(data);
+      setFetchedNews(data);
+
+      const allTags = data.map((curr) => curr.tags);
+      const uniqueTags = new Set([...allTags]);
+      setPossibleFilters([...uniqueTags]);
+
       const userInfo = await fetchPersonalData();
       const { likedPosts } = userInfo;
       setLikedPosts(likedPosts);
@@ -70,7 +60,19 @@ function HomePage() {
     init();
   }, [refetch]);
 
-  const theme = useTheme()
+  const theme = useTheme();
+
+  const handleFilterChange = (event) => {
+    const { value } = event.target;
+    setFilter(value);
+    if (value === "") {
+      setNews(fetchedNews);
+    } else {
+      const filteredNews = fetchedNews.filter((curr) => curr.tags === value);
+      setNews(filteredNews);
+    }
+  };
+
   return (
     <LoadingContainer isLoading={isLoading}>
       <Container>
@@ -109,6 +111,33 @@ function HomePage() {
           </IconButton>
         </Box>
         <StyledDivider />
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "flex-end",
+            marginBottom: "30px",
+          }}
+        >
+          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+            <InputLabel id="demo-simple-select-standard-label">
+              Category
+            </InputLabel>
+
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              value={filter}
+              onChange={handleFilterChange}
+              label="Category"
+            >
+              <MenuItem value={""}>Category</MenuItem>
+              {possibleFilters.map((currFilter) => (
+                <MenuItem value={currFilter}>{currFilter}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
         <Box
           sx={{
             display: "flex",

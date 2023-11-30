@@ -58,7 +58,6 @@ function DropdownShareButton({ articleUrl }) {
         <div>
           <Button color="inherit" {...bindToggle(popupState)}>
             <FaRegShareSquare />
-            Share Article
           </Button>
           <Popper {...bindPopper(popupState)} transition>
             {({ TransitionProps }) => (
