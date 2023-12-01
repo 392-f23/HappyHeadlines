@@ -37,6 +37,10 @@ function HomePage() {
     const latestNews = await fetchReportsFromAPI();
     const positiveLatestNews = getPostiveNews(latestNews);
     await pushNewsToDB(positiveLatestNews);
+
+    if (positiveLatestNews.length === 0) {
+      alert("There are no new positive news for now... Please try again later");
+    }
     setRefetch(!refetch);
     setIsLoading(false);
   };

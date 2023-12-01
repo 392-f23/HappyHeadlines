@@ -52,14 +52,23 @@ const CommentPage = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "calc(100vh - 100px)",
+        display: "flex",
+        flexDirection: "column",
+        marginBottom: "75px",
+      }}
+    >
       <Box
         sx={{
           width: "100%",
+          height: "10%",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          marginTop: "10px",
+          marginBottom: "10px",
         }}
       >
         <Box
@@ -86,11 +95,20 @@ const CommentPage = () => {
         </Box>
       </Box>
 
-      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+      <Box
+        sx={{
+          width: "100%",
+          minHeight: "30%",
+          height: "30%",
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "10px",
+        }}
+      >
         <Box
           component="img"
           src={news.image !== "" ? news.image : DefaultNewsImage}
-          sx={{ width: "90%", height: "300px" }}
+          sx={{ width: "90%", height: "100%" }}
           onClick={() => openNews()}
         />
       </Box>
@@ -100,11 +118,11 @@ const CommentPage = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "5%",
-          height: "calc(100% - 510px)",
+          padding: "0 5%",
+          height: "50%",
         }}
       >
-        <Box sx={{ maxHeight: "80%", overflowY: "auto" }}>
+        <Box sx={{ maxHeight: "100%", overflowY: "auto" }}>
           {comments.length === 0 && (
             <Typography sx={{ textAlign: "center", fontWeight: "bolder" }}>
               Be the first person to comment!
@@ -149,7 +167,13 @@ const CommentPage = () => {
           ))}
         </Box>
 
-        <Box sx={{ width: "100%", marginTop: "10px", marginBottom: "15px" }}>
+        <Box
+          sx={{
+            width: "100%",
+            height: "10%",
+            marginTop: "auto",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
