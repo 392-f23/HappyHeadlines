@@ -203,7 +203,7 @@ function HomePage() {
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
           sx={{ height: "100%" }}
         >
-          <Alert severity="info">
+          <Alert severity="info" onClose={handleAlertClose}>
             There is no positive news for now... Please try again later!
           </Alert>
         </Snackbar>
