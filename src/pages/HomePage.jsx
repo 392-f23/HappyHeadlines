@@ -8,6 +8,8 @@ import {
   MenuItem,
   InputLabel,
   FormControl,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import NewsCard from "../components/NewsCard";
 import StyledDivider from "../components/StyledDivider";
@@ -31,6 +33,7 @@ function HomePage() {
   const [refetch, setRefetch] = useState(false);
   const [filter, setFilter] = useState("");
   const [possibleFilters, setPossibleFilters] = useState([]);
+  const [openAlert, setOpenAlert] = useState(false);
 
   const fetchLatestNews = async () => {
     setIsLoading(true);
@@ -39,8 +42,9 @@ function HomePage() {
     await pushNewsToDB(positiveLatestNews);
 
     if (positiveLatestNews.length === 0) {
-      alert("There are no new positive news for now... Please try again later");
+      setOpenAlert(true);
     }
+
     setRefetch(!refetch);
     setIsLoading(false);
   };
@@ -102,6 +106,10 @@ function HomePage() {
       const filteredNews = fetchedNews.filter((curr) => curr.tags === value);
       setNews(filteredNews);
     }
+  };
+
+  const handleAlertClose = () => {
+    setOpenAlert(false);
   };
 
   return (
@@ -188,6 +196,17 @@ function HomePage() {
             );
           })}
         </Box>
+        <Snackbar
+          open={openAlert}
+          autoHideDuration={3000}
+          onClose={handleAlertClose}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          sx={{ height: "100%" }}
+        >
+          <Alert severity="info">
+            There is no positive news for now... Please try again later!
+          </Alert>
+        </Snackbar>
       </Container>
     </LoadingContainer>
   );
