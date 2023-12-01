@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import OnboardingPage from "./pages/OnboardingPage";
+import CommentPage from "./pages/CommentPage";
 import LoadingContainer from "./components/LoadingContainer";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import {
@@ -20,7 +21,8 @@ const privateRoutes = [
   {
     path: "/profile",
     component: () => <ProfilePage />,
-  }, // todo: change params
+  },
+  { path: "/comment", component: () => <CommentPage /> },
 ];
 
 const publicRoutes = [{ path: "/login", component: () => <LoginPage /> }];

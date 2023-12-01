@@ -11,41 +11,48 @@ function LoginPage() {
 
   return (
     <Container>
-      <Box sx={{ mt: 6 }}>
-        <Typography variant="h1" sx={{ fontSize: "2.3rem" }}>
-          NonNegativeNews
-        </Typography>
-        <StyledDivider />
-      </Box>
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          mt: "33vh",
+          width: "100%",
+          height: "100%",
         }}
       >
-        <Typography variant="h2" sx={{ textAlign: "center", mb: 2 }}>
-          Positive news from around the world right at your fingertips.
-        </Typography>
-        <Button
-          fullWidth
-          startIcon={<GoogleIcon sx={{ width: "36px", height: "36px" }} />}
+        <Box sx={{ mt: 6 }}>
+          <Typography variant="h1" sx={{ fontSize: "2.3rem" }}>
+            NonNegativeNews
+          </Typography>
+          <StyledDivider />
+        </Box>
+        <Box
           sx={{
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.text.primary,
-            borderRadius: "30px",
-            fontSize: "1.4rem",
-            filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
-            "&:hover": {
-              backgroundColor: theme.palette.primary[4],
-            },
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            mt: "33vh",
           }}
-          onClick={() => signUpWithGoogle(navigate)}
         >
-          Log in with Google
-        </Button>
+          <Typography variant="h2" sx={{ textAlign: "center", mb: 2 }}>
+            Positive news from around the world right at your fingertips.
+          </Typography>
+          <Button
+            fullWidth
+            startIcon={<GoogleIcon sx={{ width: "36px", height: "36px" }} />}
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.text.primary,
+              borderRadius: "30px",
+              fontSize: "1.4rem",
+              filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
+              "&:hover": {
+                backgroundColor: theme.palette.primary[4],
+              },
+            }}
+            onClick={() => signUpWithGoogle(navigate)}
+          >
+            Log in with Google
+          </Button>
+        </Box>
       </Box>
     </Container>
   );

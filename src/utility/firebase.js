@@ -51,22 +51,35 @@ const pushNewsToDB = async (news) => {
       const target = multimedia.filter(
         (currImg) => currImg.subType === "xlarge"
       );
-      const [targetImg] = target;
-      const { url } = targetImg;
 
-      if (!url) {
-        return;
+      if (target.length === 0) {
+        const newsObject = {
+          id,
+          image: "",
+          title: headline.main,
+          tags: sectionName,
+          articleUrl: webUrl,
+          summary: leadParagraph,
+          comments: [],
+        };
+
+        await addDoc(collection(db, "Stories"), newsObject);
+      } else {
+        const [targetImg] = target;
+        const { url } = targetImg;
+
+        const newsObject = {
+          id,
+          image: baseUrl + url,
+          title: headline.main,
+          tags: sectionName,
+          articleUrl: webUrl,
+          summary: leadParagraph,
+          comments: [],
+        };
+
+        await addDoc(collection(db, "Stories"), newsObject);
       }
-
-      const newsObject = {
-        id,
-        image: baseUrl + url,
-        title: headline.main,
-        tags: sectionName,
-        articleUrl: webUrl,
-        summary: leadParagraph,
-      };
-      await addDoc(collection(db, "Stories"), newsObject);
     });
   });
 };
@@ -219,13 +232,7 @@ const fetchUserData = async (uid) => {
   const snapshot = await getDoc(userRef);
 
   if (snapshot.exists()) {
-    const data = await snapshot.data();
-
-    if (uid === localStorage.getItem("uid")) {
-      localStorage.setItem("prevRequestLength", data.Requests.length);
-    }
-
-    return Object.assign(data, { uid: snapshot.id });
+    return snapshot.data();
   }
 
   return null;
@@ -283,6 +290,18 @@ const fetchStory = async (id) => {
   }
 };
 
+const updateComments = async (documentId, comment) => {
+  const postRef = doc(db, "Stories", documentId);
+  const snapshot = await getDoc(postRef);
+
+  if (snapshot.exists()) {
+    const data = snapshot.data();
+    const { comments } = data;
+    comments.push(comment);
+    await setDoc(postRef, data);
+  }
+};
+
 export {
   db,
   auth,
@@ -300,6 +319,7 @@ export {
   pushNewsToDB,
   fetchNewsFromDb,
   fetchStory,
+  updateComments,
 };
 
 export default submitFormInformation;
