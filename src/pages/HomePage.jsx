@@ -18,6 +18,7 @@ import fetchReportsFromAPI from "../utility/api";
 import {
   fetchNewsFromDb,
   fetchPersonalData,
+  fetchUserData,
   pushNewsToDB,
 } from "../utility/firebase";
 import RefreshIcon from "@mui/icons-material/Refresh";
@@ -44,6 +45,32 @@ function HomePage() {
     const init = async () => {
       setIsLoading(true);
       const data = await fetchNewsFromDb();
+
+      const promises = [];
+      data.forEach((curr) => {
+        const { comments } = curr;
+        if (comments) {
+          comments.forEach((curr) => {
+            promises.push(fetchUserData(curr.id));
+          });
+        }
+      });
+
+      await Promise.all(promises).then((users) => {
+        let index = 0;
+        data.forEach((curr) => {
+          const { comments } = curr;
+          if (comments) {
+            comments.map((curr) => {
+              const currUser = users[index];
+              const { displayName, photoURL } = currUser;
+              index += 1;
+              return Object.assign(curr, { displayName, photoURL });
+            });
+          }
+        });
+      });
+
       setNews(data);
       setFetchedNews(data);
 
@@ -114,26 +141,18 @@ function HomePage() {
         <Box
           sx={{
             width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
             marginBottom: "30px",
           }}
         >
-          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-simple-select-standard-label">
-              Category
-            </InputLabel>
+          <FormControl variant="filled" sx={{ width: "100%" }}>
+            <InputLabel>Tags</InputLabel>
 
-            <Select
-              labelId="demo-simple-select-standard-label"
-              id="demo-simple-select-standard"
-              value={filter}
-              onChange={handleFilterChange}
-              label="Category"
-            >
-              <MenuItem value={""}>Category</MenuItem>
-              {possibleFilters.map((currFilter) => (
-                <MenuItem value={currFilter}>{currFilter}</MenuItem>
+            <Select value={filter} onChange={handleFilterChange} label="Tags">
+              <MenuItem value={""}>Default</MenuItem>
+              {possibleFilters.map((currFilter, index) => (
+                <MenuItem key={index} value={currFilter}>
+                  {currFilter}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -159,6 +178,8 @@ function HomePage() {
                 id={data.id}
                 documentId={data.documentId}
                 isFavorite={likedPosts.includes(data.documentId)}
+                index={idx}
+                currData={data}
               />
             );
           })}

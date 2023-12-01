@@ -2,8 +2,6 @@ import Container from "../components/Container";
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import StyledDivider from "../components/StyledDivider";
 import BookmarkedStory from "../components/BookmarkedStory";
-import initialData from "../utility/initial-data.json";
-import TopicSelect from "../components/TopicSelect";
 import { useState, useEffect } from "react";
 import {
   handleLogOut,
@@ -11,49 +9,20 @@ import {
   fetchStory,
 } from "../utility/firebase";
 import { useNavigate } from "react-router-dom";
+import LoadingContainer from "../components/LoadingContainer";
 
 function ProfilePage() {
   const theme = useTheme();
-  const possibleTags = [
-    "Business",
-    "Entertainment",
-    "General",
-    "Health",
-    "Science",
-    "Sports",
-    "Technology",
-  ];
 
-  const [selectedTags, setSelectedTags] = useState([]);
   const navigate = useNavigate();
   const name = localStorage.getItem("name");
   const photoUrl = localStorage.getItem("photoUrl");
   const [bookmarked, setBookmarked] = useState([]);
-  console.log("Profile Page  component render!");
-  console.log("bookmarked: \n");
-  console.log(bookmarked);
-
-  //Main Filter By Topic Function!
-  //arg: topics => array of topic keywords! (World, Business, etc.)
-  const filterByTopic = (topics) => {
-    bookmarked.filter((bm) => {
-      const tags = bm.tags;
-      var shouldInclude = true;
-      for (const tag of tags) {
-        if (tags.indexOf(tag) === -1) {
-          shouldInclude = false;
-        }
-      }
-      return shouldInclude;
-    });
-  };
-
-  //Sort Utility!
-  //sortFactors => selected criteria we need to sort by!
-  const sortBookmarkedStories = (sortFactors) => {};
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const init = async () => {
+      setIsLoading(true);
       const data = await fetchPersonalData();
       const { likedPosts } = data;
 
@@ -62,102 +31,125 @@ function ProfilePage() {
         promises.push(fetchStory(id));
       });
 
-      Promise.all(promises).then((stories) => {
-        console.log("resolved stories: \n");
-        console.log(stories);
+      await Promise.all(promises).then((stories) => {
         setBookmarked(stories);
       });
+
+      setIsLoading(false);
     };
     init();
   }, []);
 
   return (
-    <Container>
-      <Box
+    <LoadingContainer isLoading={isLoading}>
+      <Container
         sx={{
-          width: "100%",
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
-          mt: 6,
+          flexDirection: "column",
         }}
       >
         <Box
           sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mt: 6,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "flex-start",
+            }}
+          >
+            <Typography variant="h1" sx={{ mb: 1 }}>
+              NonNegativeNews
+            </Typography>
+            <Typography variant="h2">Welcome back, {name}.</Typography>
+          </Box>
+          <Box
+            component="img"
+            src={photoUrl}
+            sx={{
+              width: "45px",
+              height: "45px",
+              borderRadius: "50%",
+              filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
+            }}
+          />
+        </Box>
+        <StyledDivider />
+        <Box
+          sx={{
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "flex-start",
+            mb: 2,
           }}
         >
-          <Typography variant="h1" sx={{ mb: 1 }}>
-            NonNegativeNews
+          <Typography variant="h2" sx={{ mb: 2 }}>
+            Your bookmarked stories.
           </Typography>
-          <Typography variant="h2">Welcome back, {name}.</Typography>
-        </Box>
-        <Box
-          component="img"
-          src={photoUrl}
-          sx={{
-            width: "45px",
-            height: "45px",
-            borderRadius: "50%",
-            filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
-          }}
-        />
-      </Box>
-      <StyledDivider />
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          mb: 2,
-        }}
-      >
-        <Typography variant="h2" sx={{ mb: 2 }}>
-          Your bookmarked stories.
-        </Typography>
-        <Box sx={{ width: "77vw" }}>
-          <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
-            {bookmarked &&
-              bookmarked.map((story) => {
-                return (
-                  <BookmarkedStory
-                    key={story.documentId}
-                    headline={story.summary}
-                    photoUrl={story.image}
-                    articleUrl={story.articleUrl}
-                    title={story.title}
-                  />
-                );
-              })}
+          <Box sx={{ width: "77vw" }}>
+            {bookmarked && bookmarked.length === 0 && (
+              <Box
+                sx={{
+                  minHeight: "400px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h3" sx={{ textAlign: "center" }}>
+                  No bookmarked stories yet!
+                </Typography>
+              </Box>
+            )}
+            {bookmarked && bookmarked.length > 0 && (
+              <Box sx={{ overflow: "auto", whiteSpace: "nowrap" }}>
+                {bookmarked.map((story) => {
+                  return (
+                    <BookmarkedStory
+                      key={story.documentId}
+                      headline={story.summary}
+                      photoUrl={story.image}
+                      articleUrl={story.articleUrl}
+                      title={story.title}
+                    />
+                  );
+                })}
+              </Box>
+            )}
           </Box>
         </Box>
-      </Box>
-      <Box sx={{ width: "100%" }}>
-        <StyledDivider />
-        <Button
-          fullWidth
-          sx={{
-            backgroundColor: theme.palette.text.primary,
-            color: theme.palette.primary[3],
-            borderRadius: "30px",
-            fontSize: "1.4rem",
-            filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
-            mb: 14,
-            "&:hover": {
-              backgroundColor: theme.palette.primary[5],
-            },
-          }}
-          onClick={() => handleLogOut(navigate)}
-        >
-          Log Out
-        </Button>
-      </Box>
-    </Container>
+        <Box sx={{ width: "100%", marginTop: "auto" }}>
+          <StyledDivider />
+          <Button
+            fullWidth
+            sx={{
+              backgroundColor: theme.palette.text.primary,
+              color: theme.palette.primary[3],
+              borderRadius: "30px",
+              fontSize: "1.4rem",
+              filter: "drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25))",
+              mb: 14,
+              "&:hover": {
+                backgroundColor: theme.palette.primary[5],
+              },
+            }}
+            onClick={() => handleLogOut(navigate)}
+          >
+            Log Out
+          </Button>
+        </Box>
+      </Container>
+    </LoadingContainer>
   );
 }
 

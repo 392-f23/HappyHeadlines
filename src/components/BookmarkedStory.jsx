@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { Box, Typography, Button } from "@mui/material";
 
 function BookmarkedStory({ headline, photoUrl, articleUrl, title }) {
   const [expanded, setExpanded] = useState(false);
@@ -15,6 +15,7 @@ function BookmarkedStory({ headline, photoUrl, articleUrl, title }) {
         mr: 1,
         width: "170px",
         maxWidth: "170px",
+        maxHeight: "450px",
         whiteSpace: "normal",
       }}
     >
@@ -44,49 +45,50 @@ function BookmarkedStory({ headline, photoUrl, articleUrl, title }) {
           }}
           onClick={() => window.open(articleUrl, "_blank")}
         />
-        <Typography sx={{
-          fontWeight:"bold",
-          textAlign:"center"
-        }}>
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
           {title}
         </Typography>
-      <Typography
-        variant="body1"
-        sx={{
-          width: '100%',
-          height: expanded ? 'auto' : '6em', // Show max 2 lines initially
-          overflow: 'hidden',
-          wordBreak: 'break-word',
-          textAlign: 'center',
-          position: 'relative',
-          display: '-webkit-box',
-          '-webkit-line-clamp': expanded ? 'unset' : 2, // Limit to 2 lines
-          '-webkit-box-orient': 'vertical',
-          mb: 2,
-        }}
-      >
-        {headline}
-        
-      </Typography>
-      
-      {!expanded && (
-        <Box>
-          {/* these 3 dots should go next to the minimized text */}
-          <Typography>
-            ...
-          </Typography>
-          <button onClick={toggleExpanded} style={{ display: 'block', margin: '0 auto' }}>
-            Show more
-          </button>
-        </Box>
-        
-        
-      )}
-      {expanded && (
-        <button onClick={toggleExpanded} style={{ display: 'block', margin: '0 auto' }}>
-          Show less
-        </button>
-      )}
+        <Typography
+          variant="body1"
+          sx={{
+            width: "100%",
+            height: expanded ? "auto" : "6em", // Show max 2 lines initially
+            overflow: "hidden",
+            wordBreak: "break-word",
+            textAlign: "center",
+            position: "relative",
+            display: "-webkit-box",
+            lineClamp: expanded ? "unset" : 2, // Limit to 2 lines
+            textOverflow: "ellipsis",
+            "-webkit-box-orient": "vertical",
+          }}
+        >
+          {headline}
+        </Typography>
+
+        {!expanded && (
+          <Box>
+            <Button
+              onClick={toggleExpanded}
+              sx={{ display: "block", margin: "0 auto" }}
+            >
+              Show more
+            </Button>
+          </Box>
+        )}
+        {expanded && (
+          <Button
+            onClick={toggleExpanded}
+            sx={{ display: "block", margin: "0 auto" }}
+          >
+            Show less
+          </Button>
+        )}
       </Box>
     </Box>
   );
